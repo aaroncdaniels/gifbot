@@ -24,22 +24,22 @@ namespace gifbot.Controllers
 	    public async Task<HttpResponseMessage> Post(RootObject r)
 		{
 			var message = r.resource.content;
-			var bits = message.Split(' ');
-			if (bits.Length != 1 || bits[0] != _configuration.BotName)
+			if (!message.StartsWith(_configuration.BotName))
 			{
 				//Not us...just return.
 				return new HttpResponseMessage(HttpStatusCode.OK);
 			}
 
-		    string subject = null;
-			
-			if (bits.Length >= 2)
-				subject = bits[1];
+		    var chatMessage = message.Substring(_configuration.BotName.Length - 1).Trim();
+
+			string subject = null;
+			if (!string.IsNullOrWhiteSpace(chatMessage))
+				subject = chatMessage;
 
 		    var gif = await _gifStore.GetGifAsync(subject);
 
 			await WriteToChatroom(r.resource.postedRoomId,
-				$"{_configuration.BotName} retrieved {gif.data?.image_original_url}. Powered By Giphy.");
+				$"{_configuration.BotName} retrieved {gif.data?.image_original_url} Powered By Giphy.");
 
 			return new HttpResponseMessage(HttpStatusCode.OK);
 		}
@@ -48,7 +48,7 @@ namespace gifbot.Controllers
 		{
 			var tfsUri = new Uri(_configuration.TfsUri);
 			var client = new ChatHttpClient(tfsUri,
-				 new VssCredentials()); //use app pool credentials
+				 new VssCredentials());
 			await client.SendMessageToRoomAsync(new MessageData {Content = message}, roomid);
 		}
 
