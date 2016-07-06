@@ -33,13 +33,17 @@ namespace gifbot.Controllers
 		    var chatMessage = message.Substring(_configuration.BotName.Length - 1).Trim();
 
 			string subject = null;
-			if (!string.IsNullOrWhiteSpace(chatMessage))
-				subject = chatMessage;
+		    string subjectMessage = null;
+		    if (!string.IsNullOrWhiteSpace(chatMessage))
+		    {
+			    subject = chatMessage;
+			    subjectMessage = $" tagged [{subject}]";
+		    }
 
 		    var gif = await _gifStore.GetGifAsync(subject);
 
 			await WriteToChatroom(r.resource.postedRoomId,
-				$"{_configuration.BotName} retrieved {gif.data?.image_original_url} Powered By Giphy.");
+				$"{gif.data?.image_original_url} - Powered By Giphy. - Retrieved by {_configuration.BotDescription} - Random gif{subjectMessage}");
 
 			return new HttpResponseMessage(HttpStatusCode.OK);
 		}
