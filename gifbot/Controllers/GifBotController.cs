@@ -30,7 +30,7 @@ namespace gifbot.Controllers
 				return new HttpResponseMessage(HttpStatusCode.OK);
 			}
 
-		    var chatMessage = message.Substring(_configuration.BotName.Length - 1).Trim();
+		    var chatMessage = message.Substring(_configuration.BotName.Length).Trim();
 
 			string subject = null;
 		    string subjectMessage = null;
