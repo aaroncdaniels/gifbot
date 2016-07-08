@@ -7,5 +7,6 @@
 		string ErrorMessage { get; }
 		string TfsUri { get; }
 		string GiphyUrlWithApiToken { get; }
+		string Rating { get; }
 	}
 }

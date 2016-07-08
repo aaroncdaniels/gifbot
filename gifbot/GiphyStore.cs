@@ -21,6 +21,9 @@ namespace gifbot
 		{
 			var url = _configuration.GiphyUrlWithApiToken;
 
+			if (!string.IsNullOrWhiteSpace(_configuration.Rating))
+				url += $"&rating={_configuration.Rating}";
+
 			if (!string.IsNullOrWhiteSpace(subject))
 				url += "&tag=" + HttpUtility.UrlEncode(subject);
 			

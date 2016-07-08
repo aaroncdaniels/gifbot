@@ -9,5 +9,6 @@ namespace gifbot
 		public string ErrorMessage => ConfigurationManager.AppSettings["errorMessage"];
 		public string TfsUri => ConfigurationManager.AppSettings["tfsUri"];
 		public string GiphyUrlWithApiToken => ConfigurationManager.AppSettings["giphyUrlWithApiToken"];
+		public string Rating => ConfigurationManager.AppSettings["rating"];
 	}
 }

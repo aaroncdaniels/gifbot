@@ -20,7 +20,8 @@ namespace gifbot.Controllers
 		    _gifStore = gifStore;
 	    }
 
-	    [HttpPost, Route("gifbot")]
+		//Assuming app is named "gifbot"
+	    [HttpPost, Route("retrieve")]
 	    public async Task<HttpResponseMessage> Post(RootObject r)
 		{
 			var message = r.resource.content;
@@ -40,11 +41,20 @@ namespace gifbot.Controllers
 			    subjectMessage = $" tagged [{subject}]";
 		    }
 
-		    var gif = await _gifStore.GetGifAsync(subject);
+		    try
+		    {
+				var gif = await _gifStore.GetGifAsync(subject);
 
-			await WriteToChatroom(r.resource.postedRoomId,
-				$"{gif.data?.image_original_url} - Powered By Giphy. - Retrieved by {_configuration.BotDescription} - Random gif{subjectMessage}");
-
+				await WriteToChatroom(r.resource.postedRoomId,
+					$"{gif.data?.image_original_url} - Powered By Giphy. - Retrieved by {_configuration.BotDescription} - Random gif{subjectMessage}");
+			}
+		    catch (Exception ex)
+		    {
+			    await WriteToChatroom(
+					r.resource.postedRoomId, 
+					_configuration.ErrorMessage + $"Exception message is [{ex.Message}].");
+		    }
+		   
 			return new HttpResponseMessage(HttpStatusCode.OK);
 		}
 
@@ -56,10 +66,10 @@ namespace gifbot.Controllers
 			await client.SendMessageToRoomAsync(new MessageData {Content = message}, roomid);
 		}
 
-		[HttpGet, Route("gifbot")]
+		[HttpGet, Route("ping")]
 		public Task<string> Get()
 		{
-			return Task.FromResult("Hello World!");
+			return Task.FromResult(_configuration.BotName + " is alive!");
 		}
 	}
 }
