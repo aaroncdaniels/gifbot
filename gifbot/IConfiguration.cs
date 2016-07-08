@@ -8,5 +8,6 @@
 		string TfsUri { get; }
 		string GiphyUrlWithApiToken { get; }
 		string Rating { get; }
+		string HelpMessage { get; }
 	}
 }

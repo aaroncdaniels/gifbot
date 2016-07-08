@@ -10,5 +10,6 @@ namespace gifbot
 		public string TfsUri => ConfigurationManager.AppSettings["tfsUri"];
 		public string GiphyUrlWithApiToken => ConfigurationManager.AppSettings["giphyUrlWithApiToken"];
 		public string Rating => ConfigurationManager.AppSettings["rating"];
+		public string HelpMessage => ConfigurationManager.AppSettings["helpMessage"];
 	}
 }

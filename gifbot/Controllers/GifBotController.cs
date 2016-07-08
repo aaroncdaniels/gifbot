@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace gifbot.Controllers
 	    private readonly IConfiguration _configuration;
 	    private readonly IGifStore _gifStore;
 
+	    private readonly string[] _supportedCommands = {"search", "translate", "random", "trending"};
+
 	    public GifBotController(IConfiguration configuration, IGifStore gifStore)
 	    {
 		    _configuration = configuration;
@@ -22,16 +25,26 @@ namespace gifbot.Controllers
 
 		//Assuming app is named "gifbot"
 	    [HttpPost, Route("retrieve")]
-	    public async Task<HttpResponseMessage> Post(RootObject r)
+	    public async Task<HttpResponseMessage> Post(RootObject rootObject)
 		{
-			var message = r.resource.content;
-			if (!message.StartsWith(_configuration.BotName))
+			var args = rootObject?.resource?.content?.Split(' ');
+			
+			if (args == null || !args[0].Equals(_configuration.BotName, StringComparison.OrdinalIgnoreCase) || rootObject.resource == null)
 			{
-				//Not us...just return.
+				//They're just talking about you gifbot, or something's wrong...just ignore them.
 				return new HttpResponseMessage(HttpStatusCode.OK);
 			}
 
-		    var chatMessage = message.Substring(_configuration.BotName.Length).Trim();
+		    var roomId = rootObject.resource.postedRoomId;
+		    
+		    if (args.Length < 2 || !_supportedCommands.Any(sc => sc.Equals(args[1], StringComparison.OrdinalIgnoreCase)))
+		    {
+				await WriteToChatroom(roomId,
+					$"{_configuration.BotDescription} - Powered By Giphy. \r\n{_configuration.HelpMessage}");
+				return new HttpResponseMessage(HttpStatusCode.OK);
+			}
+
+		    var chatMessage = args[1];
 
 			string subject = null;
 		    string subjectMessage = null;
@@ -45,13 +58,13 @@ namespace gifbot.Controllers
 		    {
 				var gif = await _gifStore.GetGifAsync(subject);
 
-				await WriteToChatroom(r.resource.postedRoomId,
+				await WriteToChatroom(roomId,
 					$"{gif.data?.image_original_url} - Powered By Giphy. - Retrieved by {_configuration.BotDescription} - Random gif{subjectMessage}");
 			}
 		    catch (Exception ex)
 		    {
 			    await WriteToChatroom(
-					r.resource.postedRoomId, 
+					roomId, 
 					_configuration.ErrorMessage + $"Exception message is [{ex.Message}].");
 		    }
 		   
