@@ -54,6 +54,9 @@ namespace gifbot.Controllers
 				case "random":
 				    await RandomGif(args, roomId);
 				    break;
+				case "translate":
+				    await TranslateGif(args, roomId);
+					break;
 				default:
 				    await WriteToChatroom(roomId, "{command} not yet implemented.");
 				    break;
@@ -96,24 +99,24 @@ namespace gifbot.Controllers
 			}
 	    }
 
-	    private async Task RandomGif(IReadOnlyList<string> args, int roomId)
-	    {
+		private async Task RandomGif(IReadOnlyList<string> args, int roomId)
+		{
 			if (args.Count > 3)
 			{
 				await WriteHelpMessageToChatRoom(roomId, "Invalid number of arguments for the random function.");
 				return;
 			}
 
-		    string tag = null;
-		    string tagLine = null;
+			string tag = null;
+			string tagLine = null;
 
-		    if (args.Count == 3)
-		    {
-			    tag = args[2];
-			    tagLine = $" - Random gif tagged [{tag}]";
-		    }
+			if (args.Count == 3)
+			{
+				tag = args[2];
+				tagLine = $" - Random gif tagged [{tag}].";
+			}
 
-		    try
+			try
 			{
 				var gif = await _gifStore.RandomGifAsync(tag);
 
@@ -124,6 +127,35 @@ namespace gifbot.Controllers
 				}
 
 				await WriteToChatroom(roomId, gif + tagLine);
+			}
+			catch (Exception ex)
+			{
+				await WriteExceptionMessageToChatRoom(roomId, ex);
+			}
+		}
+
+		private async Task TranslateGif(IReadOnlyList<string> args, int roomId)
+		{
+			if (args.Count != 3)
+			{
+				await WriteHelpMessageToChatRoom(roomId, "Invalid number of arguments for the translate function.");
+				return;
+			}
+
+			var phrase = args[2];
+			var phraseLine = $" - Gif translates the phrase [{phrase}].";
+
+			try
+			{
+				var gif = await _gifStore.TranslateGifAsync(phrase);
+
+				if (gif == null)
+				{
+					await WriteToChatroom(roomId, $"Translate gif for phrase [{phrase}] returned 0 results.");
+					return;
+				}
+
+				await WriteToChatroom(roomId, gif + phraseLine);
 			}
 			catch (Exception ex)
 			{

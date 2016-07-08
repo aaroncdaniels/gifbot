@@ -1,8 +1,8 @@
 ﻿namespace gifbot.Models.Giphy
 {
-	public class RandomResult
+	public class TranslateResult
 	{
-		public RandomGif data { get; set; }
+		public Data data { get; set; }
 		public Meta meta { get; set; }
 	}
 }

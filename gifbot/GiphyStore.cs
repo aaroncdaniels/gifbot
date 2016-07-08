@@ -55,6 +55,25 @@ namespace gifbot
 			return randomResult?.data?.image_original_url;
 		}
 
+		public async Task<string> TranslateGifAsync(string phrase)
+		{
+			var url = BuildBaseUrl(_configuration.GiphyTranslateRoute);
+
+			if (!string.IsNullOrWhiteSpace(phrase))
+				url += "&s=" + HttpUtility.UrlEncode(phrase);
+
+			var httpResponse = await _httpClient
+				.GetAsync(url)
+				.ConfigureAwait(false);
+
+			httpResponse.EnsureSuccessStatusCode();
+
+			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var randomResult = JsonConvert.DeserializeObject<TranslateResult>(body);
+
+			return randomResult?.data?.images?.original.url;
+		}
+
 		private string BuildBaseUrl(string route)
 		{
 			var url = $"{_configuration.GiphyUrl}{route}{_configuration.GiphyApiKey}";

@@ -8,5 +8,7 @@ namespace gifbot
 		Task<IEnumerable<string>> SearchGifsAsync(string query, int limit = 1);
 
 		Task<string> RandomGifAsync(string tag = null);
+
+		Task<string> TranslateGifAsync(string phrase);
 	}
 }
