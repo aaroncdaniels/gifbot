@@ -163,6 +163,7 @@
     <Compile Include="Models\Giphy\RandomResult.cs" />
     <Compile Include="Models\Giphy\SearchResult.cs" />
     <Compile Include="Models\Giphy\TranslateResult.cs" />
+    <Compile Include="Models\Giphy\TrendingResult.cs" />
     <Compile Include="Models\PostedBy.cs" />
     <Compile Include="Models\Resource.cs" />
     <Compile Include="Models\RootObject.cs" />

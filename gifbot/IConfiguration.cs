@@ -13,5 +13,6 @@
 		string GiphySearchRoute { get; }
 		string GiphyRandomRoute { get; }
 		string GiphyTranslateRoute { get; }
+		string GiphyTrendingRoute { get; }
 	}
 }

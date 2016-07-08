@@ -15,5 +15,6 @@ namespace gifbot
 		public string GiphySearchRoute => ConfigurationManager.AppSettings["giphySearchRoute"];
 		public string GiphyRandomRoute => ConfigurationManager.AppSettings["giphyRandomRoute"];
 		public string GiphyTranslateRoute => ConfigurationManager.AppSettings["giphyTranslateRoute"];
+		public string GiphyTrendingRoute => ConfigurationManager.AppSettings["giphyTrendingRoute"];
 	}
 }

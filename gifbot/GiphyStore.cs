@@ -74,6 +74,23 @@ namespace gifbot
 			return randomResult?.data?.images?.original.url;
 		}
 
+		public async Task<IEnumerable<string>> TrendingGifsAsync(int limit = 1)
+		{
+			var url = BuildBaseUrl(_configuration.GiphyTrendingRoute);
+			url += $"&limit={limit}";
+
+			var httpResponse = await _httpClient
+				.GetAsync(url)
+				.ConfigureAwait(false);
+
+			httpResponse.EnsureSuccessStatusCode();
+
+			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var result = JsonConvert.DeserializeObject<TrendingResult>(body);
+
+			return result.data.Select(d => d.images).Select(i => i.original.url);
+		}
+
 		private string BuildBaseUrl(string route)
 		{
 			var url = $"{_configuration.GiphyUrl}{route}{_configuration.GiphyApiKey}";

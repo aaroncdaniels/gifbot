@@ -10,5 +10,7 @@ namespace gifbot
 		Task<string> RandomGifAsync(string tag = null);
 
 		Task<string> TranslateGifAsync(string phrase);
+
+		Task<IEnumerable<string>> TrendingGifsAsync(int limit = 1);
 	}
 }

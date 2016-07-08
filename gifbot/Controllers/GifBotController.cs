@@ -55,7 +55,10 @@ namespace gifbot.Controllers
 				    await RandomGif(args, roomId);
 				    break;
 				case "translate":
-				    await TranslateGif(args, roomId);
+					await TranslateGif(args, roomId);
+					break;
+				case "trending":
+					await TrendingGifs(args, roomId);
 					break;
 				default:
 				    await WriteToChatroom(roomId, "{command} not yet implemented.");
@@ -156,6 +159,38 @@ namespace gifbot.Controllers
 				}
 
 				await WriteToChatroom(roomId, gif + phraseLine);
+			}
+			catch (Exception ex)
+			{
+				await WriteExceptionMessageToChatRoom(roomId, ex);
+			}
+		}
+
+		private async Task TrendingGifs(IReadOnlyList<string> args, int roomId)
+		{
+			if (args.Count > 3)
+			{
+				await WriteHelpMessageToChatRoom(roomId, "Invalid number of arguments for the trending function.");
+				return;
+			}
+
+			int limit;
+			if (args.Count != 3 || !int.TryParse(args[2], out limit))
+				limit = 1;
+
+			try
+			{
+				var gifs = (await _gifStore.TrendingGifsAsync(limit)).ToList();
+				var count = gifs.Count;
+
+				if (count < 1)
+				{
+					await WriteToChatroom(roomId, $"Trending returned 0 results.");
+					return;
+				}
+
+				for (var i = 0; i < count; i++)
+					await WriteToChatroom(roomId, $"{gifs[i]} - {i + 1} of {count}");
 			}
 			catch (Exception ex)
 			{
