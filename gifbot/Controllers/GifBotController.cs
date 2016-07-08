@@ -77,12 +77,9 @@ namespace gifbot.Controllers
 			}
 
 		    var query = args[2];
+		    var limit = GetLimit(args, 3);
 
-		    int limit;
-		    if (args.Count != 4 || !int.TryParse(args[3], out limit))
-			    limit = 1;
-
-			try
+		    try
 			{
 				var gifs = (await _gifStore.SearchGifsAsync(query, limit)).ToList();
 				var count = gifs.Count;
@@ -102,7 +99,7 @@ namespace gifbot.Controllers
 			}
 	    }
 
-		private async Task RandomGif(IReadOnlyList<string> args, int roomId)
+	    private async Task RandomGif(IReadOnlyList<string> args, int roomId)
 		{
 			if (args.Count > 3)
 			{
@@ -174,9 +171,7 @@ namespace gifbot.Controllers
 				return;
 			}
 
-			int limit;
-			if (args.Count != 3 || !int.TryParse(args[2], out limit))
-				limit = 1;
+			var limit = GetLimit(args, 2);
 
 			try
 			{
@@ -223,6 +218,21 @@ namespace gifbot.Controllers
 			await WriteToChatroom(
 				roomId,
 				$"{_configuration.ErrorMessage} - Exception message is [{ex.Message}].");
+		}
+
+		private static int GetLimit(IReadOnlyList<string> args, int index)
+		{
+			int limit;
+			if (args.Count != index + 1 || !int.TryParse(args[index], out limit))
+				return 1;
+
+			if (limit < 1)
+				limit = 1;
+
+			if (limit > 10)
+				limit = 10;
+
+			return limit;
 		}
 	}
 }
