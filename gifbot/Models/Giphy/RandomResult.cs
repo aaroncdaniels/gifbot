@@ -1,12 +1,12 @@
-﻿namespace gifbot.Models
+﻿namespace gifbot.Models.Giphy
 {
-	public class Gif
+	public class RandomResult
 	{
-		public GifData data { get; set; }
+		public RandomGif data { get; set; }
 		public Meta meta { get; set; }
 	}
 
-	public class GifData
+	public class RandomGif
 	{
 		public string type { get; set; }
 		public string id { get; set; }
@@ -33,11 +33,5 @@
 		public string fixed_width_small_height { get; set; }
 		public string username { get; set; }
 		public string caption { get; set; }
-	}
-
-	public class Meta
-	{
-		public short status { get; set; }
-		public string msg { get; set; }
 	}
 }

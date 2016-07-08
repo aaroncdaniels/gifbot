@@ -4,10 +4,13 @@
 	{
 		string BotName { get; }
 		string BotDescription { get; }
+		string HelpMessage { get; }
 		string ErrorMessage { get; }
 		string TfsUri { get; }
-		string GiphyUrlWithApiToken { get; }
-		string Rating { get; }
-		string HelpMessage { get; }
+		string GiphyUrl { get; }
+		string GiphyApiKey { get; }
+		string GiphyRating { get; }
+		string GiphySearchRoute { get; }
+		string GiphyRandomRoute { get; }
 	}
 }

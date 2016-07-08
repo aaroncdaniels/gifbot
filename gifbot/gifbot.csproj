@@ -154,7 +154,10 @@
     </Compile>
     <Compile Include="IConfiguration.cs" />
     <Compile Include="IGifStore.cs" />
-    <Compile Include="Models\Gif.cs" />
+    <Compile Include="Models\Giphy\Meta.cs" />
+    <Compile Include="Models\Giphy\Pagination.cs" />
+    <Compile Include="Models\Giphy\RandomResult.cs" />
+    <Compile Include="Models\Giphy\SearchResult.cs" />
     <Compile Include="Models\PostedBy.cs" />
     <Compile Include="Models\Resource.cs" />
     <Compile Include="Models\RootObject.cs" />

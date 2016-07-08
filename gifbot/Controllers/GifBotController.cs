@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -39,36 +40,101 @@ namespace gifbot.Controllers
 		    
 		    if (args.Length < 2 || !_supportedCommands.Any(sc => sc.Equals(args[1], StringComparison.OrdinalIgnoreCase)))
 		    {
-				await WriteToChatroom(roomId,
-					$"{_configuration.BotDescription} - Powered By Giphy. \r\n{_configuration.HelpMessage}");
-				return new HttpResponseMessage(HttpStatusCode.OK);
-			}
-
-		    var chatMessage = args[1];
-
-			string subject = null;
-		    string subjectMessage = null;
-		    if (!string.IsNullOrWhiteSpace(chatMessage))
-		    {
-			    subject = chatMessage;
-			    subjectMessage = $" tagged [{subject}]";
+			    await WriteHelpMessageToChatRoom(roomId);
+			    return new HttpResponseMessage(HttpStatusCode.OK);
 		    }
 
-		    try
-		    {
-				var gif = await _gifStore.GetGifAsync(subject);
+		    var command = args[1];
 
-				await WriteToChatroom(roomId,
-					$"{gif.data?.image_original_url} - Powered By Giphy. - Retrieved by {_configuration.BotDescription} - Random gif{subjectMessage}");
-			}
-		    catch (Exception ex)
+		    switch (command.ToLower())
 		    {
-			    await WriteToChatroom(
-					roomId, 
-					_configuration.ErrorMessage + $"Exception message is [{ex.Message}].");
+				case "search":
+				    await SearchGifs(args, roomId);
+				    break;
+				case "random":
+				    await RandomGif(args, roomId);
+				    break;
+				default:
+				    await WriteToChatroom(roomId, "{command} not yet implemented.");
+				    break;
 		    }
 		   
 			return new HttpResponseMessage(HttpStatusCode.OK);
+		}
+
+	    private async Task SearchGifs(IReadOnlyList<string> args, int roomId)
+	    {
+			if (args.Count < 3 | args.Count > 4)
+			{
+				await WriteHelpMessageToChatRoom(roomId, "Invalid number of arguments for the search function.");
+				return;
+			}
+
+		    var query = args[2];
+
+		    int limit;
+		    if (args.Count != 4 || !int.TryParse(args[3], out limit))
+			    limit = 1;
+
+			try
+			{
+				var gifs = (await _gifStore.SearchGifsAsync(query, limit)).ToList();
+				var count = gifs.Count;
+
+				if (count < 1)
+				{
+					await WriteToChatroom(roomId, $"Searching for [{query}] returned 0 results.");
+					return;
+				}
+
+				for (var i = 0; i < count; i++)
+					await WriteToChatroom(roomId, $"{gifs[i]} - {i + 1} of {count}");
+			}	
+			catch (Exception ex)
+			{
+				await WriteExceptionMessageToChatRoom(roomId, ex);
+			}
+	    }
+
+	    private async Task RandomGif(IReadOnlyList<string> args, int roomId)
+	    {
+			if (args.Count > 3)
+			{
+				await WriteHelpMessageToChatRoom(roomId, "Invalid number of arguments for the random function.");
+				return;
+			}
+
+		    string tag = null;
+		    string tagLine = null;
+
+		    if (args.Count == 3)
+		    {
+			    tag = args[2];
+			    tagLine = $" - Random gif tagged [{tag}]";
+		    }
+
+		    try
+			{
+				var gif = await _gifStore.RandomGifAsync(tag);
+
+				if (gif == null)
+				{
+					await WriteToChatroom(roomId, $"Random gif for tag [{tag}] returned 0 results.");
+					return;
+				}
+
+				await WriteToChatroom(roomId, gif + tagLine);
+			}
+			catch (Exception ex)
+			{
+				await WriteExceptionMessageToChatRoom(roomId, ex);
+			}
+		}
+
+		[HttpGet, Route("ping")]
+		public Task<string> Get()
+		{
+			return Task.FromResult($"{_configuration.BotDescription}is alive!");
 		}
 
 		private async Task WriteToChatroom(int roomid, string message)
@@ -76,13 +142,20 @@ namespace gifbot.Controllers
 			var tfsUri = new Uri(_configuration.TfsUri);
 			var client = new ChatHttpClient(tfsUri,
 				 new VssCredentials());
-			await client.SendMessageToRoomAsync(new MessageData {Content = message}, roomid);
+			await client.SendMessageToRoomAsync(new MessageData {Content = $"{_configuration.BotDescription}{message}"}, roomid);
 		}
 
-		[HttpGet, Route("ping")]
-		public Task<string> Get()
+		private async Task WriteHelpMessageToChatRoom(int roomId, string extraHelp = null)
 		{
-			return Task.FromResult(_configuration.BotName + " is alive!");
+			await WriteToChatroom(roomId,
+				$"{extraHelp} - {_configuration.HelpMessage}");
+		}
+
+		private async Task WriteExceptionMessageToChatRoom(int roomId, Exception ex)
+		{
+			await WriteToChatroom(
+				roomId,
+				$"{_configuration.ErrorMessage} - Exception message is [{ex.Message}].");
 		}
 	}
 }

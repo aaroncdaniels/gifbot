@@ -1,7 +1,9 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
-using gifbot.Models;
+using gifbot.Models.Giphy;
 using Newtonsoft.Json;
 
 namespace gifbot
@@ -17,15 +19,29 @@ namespace gifbot
 			_configuration = configuration;
 		}
 
-		public async Task<Gif> GetGifAsync(string subject = null)
+		public async Task<IEnumerable<string>> SearchGifsAsync(string query, int limit = 1)
 		{
-			var url = _configuration.GiphyUrlWithApiToken;
+			var url = BuildBaseUrl(_configuration.GiphySearchRoute);
+			url += $"&q={HttpUtility.UrlEncode(query)}&limit={limit}";
 
-			if (!string.IsNullOrWhiteSpace(_configuration.Rating))
-				url += $"&rating={_configuration.Rating}";
+			var httpResponse = await _httpClient
+				.GetAsync(url)
+				.ConfigureAwait(false);
 
-			if (!string.IsNullOrWhiteSpace(subject))
-				url += "&tag=" + HttpUtility.UrlEncode(subject);
+			httpResponse.EnsureSuccessStatusCode();
+
+			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var result = JsonConvert.DeserializeObject<SearchResult>(body);
+
+			return result.data.Select(d => d.images).Select(i => i.original.url);
+		}
+
+		public async Task<string> RandomGifAsync(string tag = null)
+		{
+			var url = BuildBaseUrl(_configuration.GiphyRandomRoute);
+
+			if (!string.IsNullOrWhiteSpace(tag))
+				url += "&tag=" + HttpUtility.UrlEncode(tag);
 			
 			var httpResponse = await _httpClient
 				.GetAsync(url)
@@ -34,7 +50,19 @@ namespace gifbot
 			httpResponse.EnsureSuccessStatusCode();
 
 			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-			return JsonConvert.DeserializeObject<Gif>(body);
+			var randomResult = JsonConvert.DeserializeObject<RandomResult>(body);
+
+			return randomResult?.data?.image_original_url;
+		}
+
+		private string BuildBaseUrl(string route)
+		{
+			var url = $"{_configuration.GiphyUrl}{route}{_configuration.GiphyApiKey}";
+
+			if (!string.IsNullOrWhiteSpace(_configuration.GiphyRating))
+				url += $"&rating={_configuration.GiphyRating}";
+
+			return url;
 		}
 	}
 }

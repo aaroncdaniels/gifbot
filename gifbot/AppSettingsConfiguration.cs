@@ -6,10 +6,13 @@ namespace gifbot
 	{
 		public string BotName => ConfigurationManager.AppSettings["botName"];
 		public string BotDescription => ConfigurationManager.AppSettings["botDescription"];
+		public string HelpMessage => ConfigurationManager.AppSettings["helpMessage"];
 		public string ErrorMessage => ConfigurationManager.AppSettings["errorMessage"];
 		public string TfsUri => ConfigurationManager.AppSettings["tfsUri"];
-		public string GiphyUrlWithApiToken => ConfigurationManager.AppSettings["giphyUrlWithApiToken"];
-		public string Rating => ConfigurationManager.AppSettings["rating"];
-		public string HelpMessage => ConfigurationManager.AppSettings["helpMessage"];
+		public string GiphyUrl => ConfigurationManager.AppSettings["giphyUrl"];
+		public string GiphyApiKey => ConfigurationManager.AppSettings["giphyApiKey"];
+		public string GiphyRating => ConfigurationManager.AppSettings["giphyRating"];
+		public string GiphySearchRoute => ConfigurationManager.AppSettings["giphySearchRoute"];
+		public string GiphyRandomRoute => ConfigurationManager.AppSettings["giphyRandomRoute"];
 	}
 }
