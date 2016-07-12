@@ -1,8 +1,12 @@
-﻿namespace gifbot.Models.Giphy
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace gifbot.Models.Giphy
 {
 	public class RandomResult
 	{
-		public RandomGif data { get; set; }
+		[JsonConverter(typeof(SingleValueArrayConverter<RandomGif>))]
+		public IList<RandomGif> data { get; set; }
 		public Meta meta { get; set; }
 	}
 }

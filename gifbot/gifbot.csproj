@@ -168,6 +168,7 @@
     <Compile Include="Models\Resource.cs" />
     <Compile Include="Models\RootObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleValueArrayConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

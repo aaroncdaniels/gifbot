@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using gifbot.Models.Giphy;
 using Newtonsoft.Json;
 
@@ -22,7 +21,7 @@ namespace gifbot
 		public async Task<IEnumerable<string>> SearchGifsAsync(string query, int limit = 1)
 		{
 			var url = BuildBaseUrl(_configuration.GiphySearchRoute);
-			url += $"&q={HttpUtility.UrlEncode(query)}&limit={limit}";
+			url += $"&q={query}&limit={limit}";
 
 			var httpResponse = await _httpClient
 				.GetAsync(url)
@@ -41,7 +40,7 @@ namespace gifbot
 			var url = BuildBaseUrl(_configuration.GiphyRandomRoute);
 
 			if (!string.IsNullOrWhiteSpace(tag))
-				url += "&tag=" + HttpUtility.UrlEncode(tag);
+				url += $"&tag={tag}";
 			
 			var httpResponse = await _httpClient
 				.GetAsync(url)
@@ -52,7 +51,10 @@ namespace gifbot
 			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 			var randomResult = JsonConvert.DeserializeObject<RandomResult>(body);
 
-			return randomResult?.data?.image_original_url;
+			if (randomResult?.data != null && randomResult.data.Count > 0)
+				return randomResult.data[0]?.image_original_url;
+
+			return null;
 		}
 
 		public async Task<string> TranslateGifAsync(string phrase)
@@ -60,7 +62,7 @@ namespace gifbot
 			var url = BuildBaseUrl(_configuration.GiphyTranslateRoute);
 
 			if (!string.IsNullOrWhiteSpace(phrase))
-				url += "&s=" + HttpUtility.UrlEncode(phrase);
+				url += $"&s={phrase}";
 
 			var httpResponse = await _httpClient
 				.GetAsync(url)
@@ -71,7 +73,10 @@ namespace gifbot
 			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 			var randomResult = JsonConvert.DeserializeObject<TranslateResult>(body);
 
-			return randomResult?.data?.images?.original.url;
+			if (randomResult?.data != null && randomResult.data.Count > 0)
+				return randomResult.data?[0]?.images?.original?.url;
+
+			return null;
 		}
 
 		public async Task<IEnumerable<string>> TrendingGifsAsync(int limit = 1)
