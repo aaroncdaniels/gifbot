@@ -32,7 +32,7 @@ namespace gifbot
 			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 			var result = JsonConvert.DeserializeObject<SearchResult>(body);
 
-			return result.data.Select(d => d.images).Select(i => i.original.url);
+			return result.data.Select(d => d.images).Select(i => i.fixed_height_small.url);
 		}
 
 		public async Task<string> RandomGifAsync(string tag = null)
@@ -52,7 +52,7 @@ namespace gifbot
 			var randomResult = JsonConvert.DeserializeObject<RandomResult>(body);
 
 			if (randomResult?.data != null && randomResult.data.Count > 0)
-				return randomResult.data[0]?.image_original_url;
+				return randomResult.data[0]?.fixed_height_small_url;
 
 			return null;
 		}
@@ -74,7 +74,7 @@ namespace gifbot
 			var randomResult = JsonConvert.DeserializeObject<TranslateResult>(body);
 
 			if (randomResult?.data != null && randomResult.data.Count > 0)
-				return randomResult.data?[0]?.images?.original?.url;
+				return randomResult.data?[0]?.images?.fixed_height_small?.url;
 
 			return null;
 		}
@@ -93,7 +93,7 @@ namespace gifbot
 			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 			var result = JsonConvert.DeserializeObject<TrendingResult>(body);
 
-			return result.data.Select(d => d.images).Select(i => i.original.url);
+			return result.data.Select(d => d.images).Select(i => i.fixed_height_small.url);
 		}
 
 		private string BuildBaseUrl(string route)
