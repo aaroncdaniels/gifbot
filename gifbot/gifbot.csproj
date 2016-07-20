@@ -148,12 +148,13 @@
     <Compile Include="App_Start\DiModule.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\GifBotController.cs" />
-    <Compile Include="GiphyStore.cs" />
+    <Compile Include="Core\Gif.cs" />
+    <Compile Include="Core\GiphyStore.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="IConfiguration.cs" />
-    <Compile Include="IGifStore.cs" />
+    <Compile Include="Core\IGifStore.cs" />
     <Compile Include="Models\Giphy\Data.cs" />
     <Compile Include="Models\Giphy\Image.cs" />
     <Compile Include="Models\Giphy\Images.cs" />

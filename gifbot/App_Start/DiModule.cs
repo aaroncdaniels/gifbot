@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using Autofac;
+using gifbot.Core;
 
 namespace gifbot
 {

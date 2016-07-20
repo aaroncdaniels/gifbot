@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using gifbot.Core;
 using gifbot.Models;
 using Microsoft.TeamFoundation.Chat.WebApi;
 using Microsoft.VisualStudio.Services.Common;
@@ -86,12 +87,12 @@ namespace gifbot.Controllers
 
 				if (count < 1)
 				{
-					await WriteToChatroom(roomId, $"Searching for [{query}] returned 0 results.");
+					await WriteToChatroom(roomId, $"Searching [{query}] returned 0 results.");
 					return;
 				}
 
 				for (var i = 0; i < count; i++)
-					await WriteToChatroom(roomId, $"{gifs[i]} - {i + 1} of {count}");
+					await WriteToChatroom(roomId, $"{gifs[i].FixedHeightUrl} id:[{gifs[i].Id}] - searching {FormatTerm(query)} result {i + 1} of {count}");
 			}	
 			catch (Exception ex)
 			{
@@ -108,13 +109,15 @@ namespace gifbot.Controllers
 			}
 
 			string tag = null;
-			string tagLine = null;
+			string tagLine;
 
-			if (args.Count == 3)
-			{
-				tag = args[2];
-				tagLine = $" - Random gif tagged [{tag}].";
-			}
+		    if (args.Count == 3)
+		    {
+			    tag = args[2];
+			    tagLine = $" - random gif tagged [{FormatTerm(tag)}]";
+		    }
+		    else
+			    tagLine = "- random gif";
 
 			try
 			{
@@ -122,11 +125,11 @@ namespace gifbot.Controllers
 
 				if (gif == null)
 				{
-					await WriteToChatroom(roomId, $"Random gif for tag [{tag}] returned 0 results.");
+					await WriteToChatroom(roomId, $"Random tagged [{tag}] returned 0 results.");
 					return;
 				}
 
-				await WriteToChatroom(roomId, gif + tagLine);
+				await WriteToChatroom(roomId, $"{gif.FixedHeightUrl} id:[{gif.Id}]{tagLine}");
 			}
 			catch (Exception ex)
 			{
@@ -134,7 +137,7 @@ namespace gifbot.Controllers
 			}
 		}
 
-		private async Task TranslateGif(IReadOnlyList<string> args, int roomId)
+	    private async Task TranslateGif(IReadOnlyList<string> args, int roomId)
 		{
 			if (args.Count != 3)
 			{
@@ -143,7 +146,7 @@ namespace gifbot.Controllers
 			}
 
 			var phrase = args[2];
-			var phraseLine = $" - Gif translates the phrase [{phrase}].";
+			var phraseLine = $"translates the phrase [{FormatTerm(phrase)}].";
 
 			try
 			{
@@ -151,11 +154,11 @@ namespace gifbot.Controllers
 
 				if (gif == null)
 				{
-					await WriteToChatroom(roomId, $"Translate gif for phrase [{phrase}] returned 0 results.");
+					await WriteToChatroom(roomId, $"Translate [{phrase}] returned 0 results.");
 					return;
 				}
 
-				await WriteToChatroom(roomId, gif + phraseLine);
+				await WriteToChatroom(roomId, $"{gif.FixedHeightUrl} id:[{gif.Id}] - {phraseLine}");
 			}
 			catch (Exception ex)
 			{
@@ -180,12 +183,12 @@ namespace gifbot.Controllers
 
 				if (count < 1)
 				{
-					await WriteToChatroom(roomId, $"Trending returned 0 results.");
+					await WriteToChatroom(roomId, "Trending returned 0 results.");
 					return;
 				}
 
 				for (var i = 0; i < count; i++)
-					await WriteToChatroom(roomId, $"{gifs[i]} - {i + 1} of {count}");
+					await WriteToChatroom(roomId, $"{gifs[i].FixedHeightUrl} id:[{gifs[i].Id}] - trending result {i + 1} of {count}");
 			}
 			catch (Exception ex)
 			{
@@ -204,7 +207,7 @@ namespace gifbot.Controllers
 			var tfsUri = new Uri(_configuration.TfsUri);
 			var client = new ChatHttpClient(tfsUri,
 				 new VssCredentials());
-			await client.SendMessageToRoomAsync(new MessageData {Content = $"{_configuration.BotDescription}{message}"}, roomid);
+			await client.SendMessageToRoomAsync(new MessageData {Content = $"{message}{_configuration.BotDescription}" }, roomid);
 		}
 
 		private async Task WriteHelpMessageToChatRoom(int roomId, string extraHelp = null)
@@ -218,6 +221,11 @@ namespace gifbot.Controllers
 			await WriteToChatroom(
 				roomId,
 				$"{_configuration.ErrorMessage} - Exception message is [{ex.Message}].");
+		}
+
+		private static string FormatTerm(string term)
+		{
+			return term?.Replace('+', ' ').Replace("%20", " ");
 		}
 
 		private static int GetLimit(IReadOnlyList<string> args, int index)
