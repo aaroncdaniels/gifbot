@@ -5,6 +5,10 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gifbot", "gifbot\gifbot.csproj", "{AA700144-AC05-4AFA-8AFE-F24720EA9C11}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gifbot.tests", "gifbot.tests\gifbot.tests.csproj", "{A46EE4F4-DAC6-42D0-8E03-897F313E77FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gifbot.core", "gifbot.core\gifbot.core.csproj", "{24FAE494-5D30-4A3C-BFFC-C1E22836E48F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{AA700144-AC05-4AFA-8AFE-F24720EA9C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA700144-AC05-4AFA-8AFE-F24720EA9C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA700144-AC05-4AFA-8AFE-F24720EA9C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A46EE4F4-DAC6-42D0-8E03-897F313E77FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A46EE4F4-DAC6-42D0-8E03-897F313E77FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A46EE4F4-DAC6-42D0-8E03-897F313E77FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A46EE4F4-DAC6-42D0-8E03-897F313E77FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24FAE494-5D30-4A3C-BFFC-C1E22836E48F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24FAE494-5D30-4A3C-BFFC-C1E22836E48F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24FAE494-5D30-4A3C-BFFC-C1E22836E48F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24FAE494-5D30-4A3C-BFFC-C1E22836E48F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
