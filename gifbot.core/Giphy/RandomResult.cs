@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace gifbot.Models.Giphy
+namespace gifbot.core.Giphy
 {
 	public class RandomResult
 	{

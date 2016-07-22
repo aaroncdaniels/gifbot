@@ -1,4 +1,4 @@
-﻿namespace gifbot
+﻿namespace gifbot.core
 {
 	public interface IConfiguration
 	{

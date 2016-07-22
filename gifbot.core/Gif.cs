@@ -1,4 +1,4 @@
-﻿namespace gifbot.Core
+﻿namespace gifbot.core
 {
 	public class Gif
 	{

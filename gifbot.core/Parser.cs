@@ -9,6 +9,10 @@ namespace gifbot.core
 	    private const StringComparison Oic = StringComparison.OrdinalIgnoreCase;
 
 	    private const int DefaultLimit = 1;
+	    private const int MaxLimit = 10;
+
+	    private const string DefaultRequiredTerm = "[blank]";
+
 		private const Size DefaultSize = Size.FixedHeight;
 	    
 		public Input ParseInput(string input)
@@ -83,7 +87,13 @@ namespace gifbot.core
 
 			// :crystal_ball: translate and search require a phrase...
 			if (terms.Count == 0 && (function == Function.Translate || function == Function.Search))
-				terms.Add("phrase-not-provided");
+				terms.Add(DefaultRequiredTerm);
+
+			if (limit < 1)
+				limit = 1;
+
+			if (limit > MaxLimit)
+				limit = MaxLimit;
 			
 			return new Input(function, terms, limit, size);
 	    }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace gifbot
+namespace gifbot.core
 {
 	public class SingleValueArrayConverter<T> : JsonConverter
 	{

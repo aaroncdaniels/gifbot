@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace gifbot.Models.Giphy
+namespace gifbot.core.Giphy
 {
-	public class SearchResult
+	public class TrendingResult
 	{
 		[JsonConverter(typeof(SingleValueArrayConverter<Data>))]
 		public List<Data> data { get; set; }

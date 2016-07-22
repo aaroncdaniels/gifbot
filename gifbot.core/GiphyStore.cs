@@ -2,7 +2,8 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using gifbot.Models.Giphy;
+using gifbot.core;
+using gifbot.core.Giphy;
 using Newtonsoft.Json;
 
 namespace gifbot.Core
@@ -16,57 +17,6 @@ namespace gifbot.Core
 		{
 			_httpClient = httpClient;
 			_configuration = configuration;
-		}
-
-		public async Task<IEnumerable<Gif>> SearchGifsAsync(string query, int limit = 1)
-		{
-			var url = BuildBaseUrl(_configuration.GiphySearchRoute);
-			url += $"&q={query}&limit={limit}";
-
-			var httpResponse = await _httpClient
-				.GetAsync(url)
-				.ConfigureAwait(false);
-
-			httpResponse.EnsureSuccessStatusCode();
-
-			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-			var result = JsonConvert.DeserializeObject<SearchResult>(body);
-
-			return result?.data?.Select(d => new Gif
-			{
-				Id = d.id,
-				OriginalUrl = d.images?.original?.url,
-				FixedHeightUrl = d.images?.fixed_height?.url,
-				FixedWidthUrl = d.images?.fixed_width?.url
-			});
-		}
-
-		public async Task<Gif> RandomGifAsync(string tag = null)
-		{
-			var url = BuildBaseUrl(_configuration.GiphyRandomRoute);
-
-			if (!string.IsNullOrWhiteSpace(tag))
-				url += $"&tag={tag}";
-			
-			var httpResponse = await _httpClient
-				.GetAsync(url)
-				.ConfigureAwait(false);
-
-			httpResponse.EnsureSuccessStatusCode();
-
-			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-			var result = JsonConvert.DeserializeObject<RandomResult>(body);
-
-			if (result?.data != null && result.data.Count > 0)
-				return new Gif
-				{
-					Id = result.data[0].id,
-					OriginalUrl = result.data[0].image_original_url,
-					FixedHeightUrl = result.data[0].fixed_height_small_url,
-					FixedWidthUrl = result.data[0].fixed_width_small_url
-				};
-
-			return null;
 		}
 
 		public async Task<Gif> TranslateGifAsync(string phrase)
@@ -97,6 +47,60 @@ namespace gifbot.Core
 			return null;
 		}
 
+		public async Task<Gif> RandomGifAsync(string tag = null)
+		{
+			var url = BuildBaseUrl(_configuration.GiphyRandomRoute);
+
+			if (!string.IsNullOrWhiteSpace(tag))
+				url += $"&tag={tag}";
+			
+			var httpResponse = await _httpClient
+				.GetAsync(url)
+				.ConfigureAwait(false);
+
+			httpResponse.EnsureSuccessStatusCode();
+
+			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var result = JsonConvert.DeserializeObject<RandomResult>(body);
+
+			if (result?.data != null && result.data.Count > 0)
+				return new Gif
+				{
+					Id = result.data[0].id,
+					OriginalUrl = result.data[0].image_original_url,
+					FixedHeightUrl = result.data[0].fixed_height_small_url,
+					FixedWidthUrl = result.data[0].fixed_width_small_url
+				};
+
+			return null;
+		}
+
+		public async Task<IEnumerable<Gif>> SearchGifsAsync(string query, int limit = 1)
+		{
+			var url = BuildBaseUrl(_configuration.GiphySearchRoute);
+			url += $"&q={query}&limit={limit}";
+
+			var httpResponse = await _httpClient
+				.GetAsync(url)
+				.ConfigureAwait(false);
+
+			httpResponse.EnsureSuccessStatusCode();
+
+			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+			var result = JsonConvert.DeserializeObject<SearchResult>(body);
+
+			if (result?.data == null)
+				return Enumerable.Empty<Gif>();
+
+			return result.data.Select(d => new Gif
+			{
+				Id = d.id,
+				OriginalUrl = d.images?.original?.url,
+				FixedHeightUrl = d.images?.fixed_height?.url,
+				FixedWidthUrl = d.images?.fixed_width?.url
+			});
+		}
+
 		public async Task<IEnumerable<Gif>> TrendingGifsAsync(int limit = 1)
 		{
 			var url = BuildBaseUrl(_configuration.GiphyTrendingRoute);
@@ -111,7 +115,10 @@ namespace gifbot.Core
 			var body = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 			var result = JsonConvert.DeserializeObject<TrendingResult>(body);
 
-			return result?.data?.Select(d => new Gif
+			if (result?.data == null)
+				return Enumerable.Empty<Gif>();
+
+			return result.data.Select(d => new Gif
 			{
 				Id = d.id,
 				OriginalUrl = d.images?.original?.url,

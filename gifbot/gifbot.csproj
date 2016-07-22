@@ -148,28 +148,13 @@
     <Compile Include="App_Start\DiModule.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\GifBotController.cs" />
-    <Compile Include="Core\Gif.cs" />
-    <Compile Include="Core\GiphyStore.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="IConfiguration.cs" />
-    <Compile Include="Core\IGifStore.cs" />
-    <Compile Include="Models\Giphy\Data.cs" />
-    <Compile Include="Models\Giphy\Image.cs" />
-    <Compile Include="Models\Giphy\Images.cs" />
-    <Compile Include="Models\Giphy\Meta.cs" />
-    <Compile Include="Models\Giphy\Pagination.cs" />
-    <Compile Include="Models\Giphy\RandomGif.cs" />
-    <Compile Include="Models\Giphy\RandomResult.cs" />
-    <Compile Include="Models\Giphy\SearchResult.cs" />
-    <Compile Include="Models\Giphy\TranslateResult.cs" />
-    <Compile Include="Models\Giphy\TrendingResult.cs" />
     <Compile Include="Models\PostedBy.cs" />
     <Compile Include="Models\Resource.cs" />
     <Compile Include="Models\RootObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SingleValueArrayConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -181,7 +166,12 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\gifbot.core\gifbot.core.csproj">
+      <Project>{24FAE494-5D30-4A3C-BFFC-C1E22836E48F}</Project>
+      <Name>gifbot.core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

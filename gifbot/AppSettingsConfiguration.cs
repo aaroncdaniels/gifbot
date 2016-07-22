@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using gifbot.core;
 
 namespace gifbot
 {

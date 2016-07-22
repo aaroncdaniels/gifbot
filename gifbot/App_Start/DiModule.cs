@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using Autofac;
+using gifbot.core;
 using gifbot.Core;
 
 namespace gifbot
@@ -12,11 +13,26 @@ namespace gifbot
 			builder
 				.RegisterType<AppSettingsConfiguration>()
 				.As<IConfiguration>()
-				.InstancePerRequest();
+				.SingleInstance();
 
 			builder
 				.RegisterType<GiphyStore>()
 				.As<IGifStore>()
+				.InstancePerRequest();
+
+			builder
+				.RegisterType<Parser>()
+				.As<IParser>()
+				.InstancePerRequest();
+
+			builder
+				.RegisterType<Process>()
+				.As<IProcess>()
+				.InstancePerRequest();
+
+			builder
+				.RegisterType<TermFormatter>()
+				.As<ITermFormatter>()
 				.InstancePerRequest();
 
 			builder

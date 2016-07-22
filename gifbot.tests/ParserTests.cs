@@ -17,7 +17,7 @@ namespace gifbot.tests
 
 		[Theory]
 		[InlineData("random", Function.Random, new string[] {}, 1, Size.FixedHeight)]
-		[InlineData("translate", Function.Translate, new[] {"phrase-not-provided"}, 1, Size.FixedHeight)]
+		[InlineData("translate", Function.Translate, new[] { "[blank]" }, 1, Size.FixedHeight)]
 		[InlineData("translate star", Function.Translate, new[] {"star"}, 1, Size.FixedHeight)]
 		[InlineData("translate star wars", Function.Translate, new[] { "star", "wars" }, 1, Size.FixedHeight)]
 		[InlineData("--random", Function.Translate, new[] { "--random" }, 1, Size.FixedHeight)]
@@ -38,6 +38,9 @@ namespace gifbot.tests
 		[InlineData("translate wt-h", Function.Translate, new[] { "wt-h" }, 1, Size.FixedHeight)]
 		[InlineData("random -- -o", Function.Random, new[] { "-o" }, 1, Size.FixedHeight)]
 		[InlineData("random -o --", Function.Random, new[] { "--" }, 1, Size.Original)]
+		[InlineData("translate hello+world!", Function.Translate, new[] { "hello+world!" }, 1, Size.FixedHeight)]
+		[InlineData("translate hello%20world!", Function.Translate, new[] { "hello%20world!" }, 1, Size.FixedHeight)]
+		[InlineData("trending 100", Function.Trending, new string[] { }, 10, Size.FixedHeight)]
 		public void InputParsesCorrectly(
 			string input, 
 			Function expectedFunction,
@@ -53,6 +56,5 @@ namespace gifbot.tests
 			Assert.Equal(expectedLimit, result.Limit);
 			Assert.Equal(expectedSize, result.Size);
 		}
-		
 	}
 }
