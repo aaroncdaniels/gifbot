@@ -1,18 +1,20 @@
-﻿namespace gifbot.core
+﻿using System.Collections.Generic;
+
+namespace gifbot.core
 {
 	public class Input
 	{
-		public Input(Function function = Function.Random, string phrase = "", int limit = 1, Size size = Size.FixedHeight)
+		public Input(Function function, IEnumerable<string> terms, int limit, Size size)
 		{
 			Function = function;
-			Size = size;
+			Terms = terms;
 			Limit = limit;
-			Phrase = phrase;
+			Size = size;
 		}
 
 		public Function Function { get; }
 
-		public string Phrase { get; }
+		public IEnumerable<string> Terms { get; }
 
 		public int Limit { get; }
 
