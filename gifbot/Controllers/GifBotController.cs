@@ -35,7 +35,7 @@ namespace gifbot.Controllers
 
 		    var roomId = rootObject.resource.postedRoomId;
 
-		    var input = roomMessage.Substring(roomMessage.LastIndexOf(_configuration.BotName, StringComparison.OrdinalIgnoreCase));
+		    var input = roomMessage.Substring(_configuration.BotName.Length + 1);
 
 		    try
 		    {
