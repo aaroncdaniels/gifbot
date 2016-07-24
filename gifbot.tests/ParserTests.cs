@@ -29,8 +29,8 @@ namespace gifbot.tests
 		[InlineData("search 2 -o -w", Function.Search, new[] { "-w" }, 2, Size.Original)]
 		[InlineData("search 6 6 6 foo bar", Function.Search, new[] { "6", "6", "foo", "bar" }, 6, Size.FixedHeight)]
 		[InlineData("trending", Function.Trending, new string[] { }, 1, Size.FixedHeight)]
-		[InlineData("random 6 6 6 foo bar -o", Function.Random, new[] { "6", "6", "6", "foo", "bar" }, 1, Size.Original)]
-		[InlineData("random 6 -o 6 foo bar", Function.Random, new[] { "6", "6", "foo", "bar" }, 1, Size.Original)]
+		[InlineData("random 6 6 6 foo bar -o", Function.Random, new[] { "6", "6", "foo", "bar" }, 6, Size.Original)]
+		[InlineData("random 6 -o 6 foo bar", Function.Random, new[] { "6", "foo", "bar" }, 6, Size.Original)]
 		[InlineData("random foo  bar", Function.Random, new[] { "foo", "bar" }, 1, Size.FixedHeight)]
 		[InlineData("trending 10 foo bar -w", Function.Trending, new[] { "foo", "bar" }, 10, Size.FixedWidth)]
 		[InlineData("trending foo 10 bar -w    baz", Function.Trending, new[] { "foo", "bar", "baz" }, 10, Size.FixedWidth)]
@@ -41,6 +41,7 @@ namespace gifbot.tests
 		[InlineData("translate hello+world!", Function.Translate, new[] { "hello+world!" }, 1, Size.FixedHeight)]
 		[InlineData("translate hello%20world!", Function.Translate, new[] { "hello%20world!" }, 1, Size.FixedHeight)]
 		[InlineData("trending 100", Function.Trending, new string[] { }, 10, Size.FixedHeight)]
+		[InlineData("translate foo 2", Function.Translate, new[] {"foo"}, 2, Size.FixedHeight)]
 		public void InputParsesCorrectly(
 			string input, 
 			Function expectedFunction,

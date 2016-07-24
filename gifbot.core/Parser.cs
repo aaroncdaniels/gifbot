@@ -52,7 +52,7 @@ namespace gifbot.core
 				    continue;
 			    }
 
-			    if (!limitFound && (function == Function.Search || function == Function.Trending))
+			    if (!limitFound)
 			    {
 				    if (int.TryParse(arg, out limit))
 				    {
