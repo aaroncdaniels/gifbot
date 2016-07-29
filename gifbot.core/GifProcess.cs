@@ -5,22 +5,32 @@ using gifbot.Core;
 
 namespace gifbot.core
 {
-	public class Process : IProcess
+	public class GifProcess : IGifProcess
 	{
 		private readonly IParser _parser;
 		private readonly ITermFormatter _termFormatter;
 		private readonly IGifStore _gifStore;
+		private readonly IConfiguration _configuration;
 
-		public Process(IParser parser, ITermFormatter termFormatter, IGifStore gifStore)
+		public GifProcess(
+			IParser parser, 
+			ITermFormatter termFormatter, 
+			IGifStore gifStore, 
+			IConfiguration configuration)
 		{
 			_parser = parser;
 			_termFormatter = termFormatter;
 			_gifStore = gifStore;
+			_configuration = configuration;
 		}
 
 		public async Task<IEnumerable<string>> ProcessAsync(string input)
 		{
 			var parsedInput = _parser.ParseInput(input);
+
+			if (parsedInput.Function == Function.Help)
+				return new List<string> {_configuration.HelpMessage};
+
 			var term = _termFormatter.Format(parsedInput.Terms);
 
 			var gifs = await RetrieveGifsAsync(parsedInput, term).ConfigureAwait(false);

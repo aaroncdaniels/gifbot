@@ -32,7 +32,7 @@ namespace gifbot.tests
 				.Returns(Task.FromResult(new Gif()))
 				.Returns(Task.FromResult(new Gif()));
 
-			var sut = fixture.Create<Process>();
+			var sut = fixture.Create<GifProcess>();
 			await sut.ProcessAsync("input");
 
 			gifStore.Verify(gs => gs.RandomGifAsync(It.IsAny<string>()), Times.Exactly(limit));
@@ -57,7 +57,7 @@ namespace gifbot.tests
 				.Returns(Task.FromResult(new Gif()))
 				.Returns(Task.FromResult(new Gif()));
 
-			var sut = fixture.Create<Process>();
+			var sut = fixture.Create<GifProcess>();
 			await sut.ProcessAsync("input");
 
 			gifStore.Verify(gs => gs.TranslateGifAsync(It.IsAny<string>()), Times.Exactly(limit));
@@ -75,7 +75,7 @@ namespace gifbot.tests
 
 			var gifStore = fixture.Freeze<Mock<IGifStore>>();
 
-			var sut = fixture.Create<Process>();
+			var sut = fixture.Create<GifProcess>();
 			await sut.ProcessAsync("input");
 
 			gifStore.Verify(gs => gs.SearchGifsAsync(It.IsAny<string>(), It.IsAny<int>()), Times.Once);
@@ -93,7 +93,7 @@ namespace gifbot.tests
 
 			var gifStore = fixture.Freeze<Mock<IGifStore>>();
 
-			var sut = fixture.Create<Process>();
+			var sut = fixture.Create<GifProcess>();
 			await sut.ProcessAsync("input");
 
 			gifStore.Verify(gs => gs.TrendingGifsAsync(It.IsAny<int>()), Times.Once);
@@ -114,7 +114,7 @@ namespace gifbot.tests
 				.Setup(gs => gs.SearchGifsAsync(It.IsAny<string>(), It.IsAny<int>()))
 				.Returns(Task.FromResult(Enumerable.Empty<Gif>()));
 
-			var sut = fixture.Create<Process>();
+			var sut = fixture.Create<GifProcess>();
 			var result = (await sut.ProcessAsync("input")).ToList();
 
 			Assert.Equal(1, result.Count);
@@ -138,7 +138,7 @@ namespace gifbot.tests
 				.Setup(gs => gs.TranslateGifAsync(It.IsAny<string>()))
 				.Returns(Task.FromResult(new Gif()));
 
-			var sut = fixture.Create<Process>();
+			var sut = fixture.Create<GifProcess>();
 			var result = (await sut.ProcessAsync("input")).ToList();
 
 			Assert.Equal(limit, result.Count);
@@ -160,7 +160,7 @@ namespace gifbot.tests
 				.Setup(gs => gs.SearchGifsAsync(It.IsAny<string>(), It.IsAny<int>()))
 				.Returns(Task.FromResult(new List<Gif> {new Gif(), new Gif() }.AsEnumerable()));
 
-			var sut = fixture.Create<Process>();
+			var sut = fixture.Create<GifProcess>();
 			var result = (await sut.ProcessAsync("input")).ToList();
 
 			Assert.Equal(2, result.Count);
@@ -168,7 +168,7 @@ namespace gifbot.tests
 		}
 
 		[Fact]
-		public async void WhenTranslateReturnsNullBeforeLimitIsReachedThenStoreIsNotInvokedForRemainder()
+		public async Task WhenTranslateReturnsNullBeforeLimitIsReachedThenStoreIsNotInvokedForRemainder()
 		{
 			var fixture = ConfiguredFixture();
 
@@ -183,10 +183,28 @@ namespace gifbot.tests
 				.Returns(Task.FromResult(new Gif()))
 				.Returns(Task.FromResult<Gif>(null));
 
-			var sut = fixture.Create<Process>();
+			var sut = fixture.Create<GifProcess>();
 			await sut.ProcessAsync("input");
 
 			gifStore.Verify(gs => gs.TranslateGifAsync(It.IsAny<string>()), Times.Exactly(2));
+		}
+
+		[Fact]
+		public async Task WhenFunctionIsHelpThenHelpMessageIsReturned()
+		{
+			var fixture = ConfiguredFixture();
+
+			var parser = fixture.Freeze<Mock<IParser>>();
+			parser
+				.Setup(p => p.ParseInput(It.IsAny<string>()))
+				.Returns(new Input(Function.Help, new string[0], 1, Size.FixedHeight));
+
+			var configuration = fixture.Freeze<Mock<IConfiguration>>();
+			
+			var sut = fixture.Create<GifProcess>();
+			await sut.ProcessAsync("input");
+
+			configuration.Verify(gs => gs.HelpMessage);
 		}
 
 		private static Fixture ConfiguredFixture()

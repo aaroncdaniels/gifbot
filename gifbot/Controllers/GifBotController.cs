@@ -13,12 +13,12 @@ namespace gifbot.Controllers
     public class GifBotController : ApiController
     {
 	    private readonly IConfiguration _configuration;
-	    private readonly IProcess _process;
+	    private readonly IGifProcess _gifProcess;
 
-	    public GifBotController(IConfiguration configuration, IProcess process)
+	    public GifBotController(IConfiguration configuration, IGifProcess gifProcess)
 	    {
 		    _configuration = configuration;
-		    _process = process;
+		    _gifProcess = gifProcess;
 	    }
 
 		//Assuming app is named "gifbot"
@@ -39,7 +39,7 @@ namespace gifbot.Controllers
 
 		    try
 		    {
-				var outputs = await _process.ProcessAsync(input);
+				var outputs = await _gifProcess.ProcessAsync(input);
 
 				foreach (var output in outputs)
 					await WriteToChatroom(roomId, output);
@@ -65,12 +65,6 @@ namespace gifbot.Controllers
 				 new VssCredentials());
 			await client.SendMessageToRoomAsync(new MessageData {Content = $"{message}{_configuration.BotDescription}" }, roomid);
 		}
-
-		//private async Task WriteHelpMessageToChatRoom(int roomId, string extraHelp = null)
-		//{
-		//	await WriteToChatroom(roomId,
-		//		$"{extraHelp} - {_configuration.HelpMessage}");
-		//}
 
 		private async Task WriteExceptionMessageToChatRoom(int roomId, Exception ex)
 		{

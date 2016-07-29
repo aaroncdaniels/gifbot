@@ -26,8 +26,8 @@ namespace gifbot
 				.InstancePerRequest();
 
 			builder
-				.RegisterType<Process>()
-				.As<IProcess>()
+				.RegisterType<GifProcess>()
+				.As<IGifProcess>()
 				.InstancePerRequest();
 
 			builder

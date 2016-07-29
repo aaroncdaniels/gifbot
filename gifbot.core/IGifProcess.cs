@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace gifbot.core
 {
-	public interface IProcess
+	public interface IGifProcess
 	{
 		Task<IEnumerable<string>> ProcessAsync(string input);
 	}

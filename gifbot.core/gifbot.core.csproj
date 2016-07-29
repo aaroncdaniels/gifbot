@@ -62,10 +62,10 @@
     <Compile Include="IGifStore.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="IParser.cs" />
-    <Compile Include="IProcess.cs" />
+    <Compile Include="IGifProcess.cs" />
     <Compile Include="ITermFormatter.cs" />
     <Compile Include="Parser.cs" />
-    <Compile Include="Process.cs" />
+    <Compile Include="GifProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleValueArrayConverter.cs" />
     <Compile Include="Size.cs" />

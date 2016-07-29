@@ -40,6 +40,9 @@ namespace gifbot.core
 			    if (i == 0 && Enum.TryParse(arg, true, out function))
 				    continue;
 
+			    if (function == Function.Help)
+				    continue;
+
 				if (ignoreOperatorFound)
 			    {
 				    terms.Add(arg);
