@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace gifbot.core.Giphy
+namespace gifbot.core.gifs.Giphy
 {
 	public class TrendingResult
 	{

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace gifbot.core
+namespace gifbot.core.gifs
 {
     public class Parser : IParser
     {

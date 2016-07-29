@@ -2,7 +2,8 @@
 using System.Net.Http.Headers;
 using Autofac;
 using gifbot.core;
-using gifbot.Core;
+using gifbot.core.gifs;
+using gifbot.core.Tfs;
 
 namespace gifbot
 {
@@ -34,6 +35,11 @@ namespace gifbot
 				.RegisterType<TermFormatter>()
 				.As<ITermFormatter>()
 				.InstancePerRequest();
+
+			builder
+				.RegisterType<TfsProcess>()
+				.As<ITfsProcess>()
+				.SingleInstance();
 
 			builder
 				.Register(context =>

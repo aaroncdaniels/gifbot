@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web;
 
-namespace gifbot.core
+namespace gifbot.core.gifs
 {
 	public class TermFormatter : ITermFormatter
 	{

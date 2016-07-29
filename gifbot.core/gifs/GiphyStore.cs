@@ -2,11 +2,10 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using gifbot.core;
-using gifbot.core.Giphy;
+using gifbot.core.gifs.Giphy;
 using Newtonsoft.Json;
 
-namespace gifbot.Core
+namespace gifbot.core.gifs
 {
 	public class GiphyStore : IGifStore
 	{

@@ -1,4 +1,4 @@
-﻿namespace gifbot.core
+﻿namespace gifbot.core.gifs
 {
 	public enum Size
 	{

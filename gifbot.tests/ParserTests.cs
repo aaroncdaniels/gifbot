@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using gifbot.core;
+using gifbot.core.gifs;
 using Xunit;
 
 namespace gifbot.tests

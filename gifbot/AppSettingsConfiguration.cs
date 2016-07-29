@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using gifbot.core;
+using gifbot.core.gifs;
 
 namespace gifbot
 {
@@ -17,5 +18,6 @@ namespace gifbot
 		public string GiphyRandomRoute => ConfigurationManager.AppSettings["giphyRandomRoute"];
 		public string GiphyTranslateRoute => ConfigurationManager.AppSettings["giphyTranslateRoute"];
 		public string GiphyTrendingRoute => ConfigurationManager.AppSettings["giphyTrendingRoute"];
+		public int QueueSize => int.Parse(ConfigurationManager.AppSettings["queueSize"]);
 	}
 }

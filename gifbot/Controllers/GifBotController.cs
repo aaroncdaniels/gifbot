@@ -3,10 +3,9 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using gifbot.core;
+using gifbot.core.gifs;
+using gifbot.core.Tfs;
 using gifbot.Models;
-using Microsoft.TeamFoundation.Chat.WebApi;
-using Microsoft.VisualStudio.Services.Common;
 
 namespace gifbot.Controllers
 {
@@ -14,11 +13,16 @@ namespace gifbot.Controllers
     {
 	    private readonly IConfiguration _configuration;
 	    private readonly IGifProcess _gifProcess;
+	    private readonly ITfsProcess _tfsProcess;
 
-	    public GifBotController(IConfiguration configuration, IGifProcess gifProcess)
+	    public GifBotController(
+			IConfiguration configuration, 
+			IGifProcess gifProcess, 
+			ITfsProcess tfsProcess)
 	    {
 		    _configuration = configuration;
 		    _gifProcess = gifProcess;
+		    _tfsProcess = tfsProcess;
 	    }
 
 		//Assuming app is named "gifbot"
@@ -39,10 +43,16 @@ namespace gifbot.Controllers
 
 		    try
 		    {
+			    if ("delete".Equals(input.Trim(), StringComparison.OrdinalIgnoreCase))
+			    {
+				    await _tfsProcess.DeleteLastMessageFromChatroom(roomId);
+					return new HttpResponseMessage(HttpStatusCode.OK);
+				}
+
 				var outputs = await _gifProcess.ProcessAsync(input);
 
 				foreach (var output in outputs)
-					await WriteToChatroom(roomId, output);
+					await _tfsProcess.WriteToChatroom(roomId, output);
 			}
 		    catch (Exception ex)
 		    {
@@ -58,17 +68,9 @@ namespace gifbot.Controllers
 			return Task.FromResult($"{_configuration.BotDescription}is alive!");
 		}
 
-		private async Task WriteToChatroom(int roomid, string message)
-		{
-			var tfsUri = new Uri(_configuration.TfsUri);
-			var client = new ChatHttpClient(tfsUri,
-				 new VssCredentials());
-			await client.SendMessageToRoomAsync(new MessageData {Content = $"{message}{_configuration.BotDescription}" }, roomid);
-		}
-
 		private async Task WriteExceptionMessageToChatRoom(int roomId, Exception ex)
 		{
-			await WriteToChatroom(
+			await _tfsProcess.WriteToChatroom(
 				roomId,
 				$"{_configuration.ErrorMessage} - Exception message is [{ex.Message}].");
 		}

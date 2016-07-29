@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using gifbot.core;
-using gifbot.Core;
+using gifbot.core.gifs;
 using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.AutoMoq;
@@ -11,7 +11,7 @@ using Xunit;
 
 namespace gifbot.tests
 {
-	public class ProcessTests
+	public class GifProcessTests
 	{
 		[Fact]
 		public async void WhenRandomFunctionRandomStoreIsInvokedLimitTimes()

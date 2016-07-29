@@ -1,4 +1,4 @@
-﻿namespace gifbot.core
+﻿namespace gifbot.core.gifs
 {
 	public interface IConfiguration
 	{
@@ -14,5 +14,6 @@
 		string GiphyRandomRoute { get; }
 		string GiphyTranslateRoute { get; }
 		string GiphyTrendingRoute { get; }
+		int QueueSize { get; }
 	}
 }

@@ -1,4 +1,4 @@
-﻿namespace gifbot.core.Giphy
+﻿namespace gifbot.core.gifs.Giphy
 {
 	public class Pagination
 	{

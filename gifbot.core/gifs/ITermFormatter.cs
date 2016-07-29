@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace gifbot.core
+namespace gifbot.core.gifs
 {
 	public interface ITermFormatter
 	{

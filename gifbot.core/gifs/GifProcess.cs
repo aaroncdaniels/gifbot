@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using gifbot.Core;
 
-namespace gifbot.core
+namespace gifbot.core.gifs
 {
 	public class GifProcess : IGifProcess
 	{

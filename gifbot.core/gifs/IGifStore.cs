@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using gifbot.core;
 
-namespace gifbot.Core
+namespace gifbot.core.gifs
 {
 	public interface IGifStore
 	{
