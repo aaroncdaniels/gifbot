@@ -6,6 +6,6 @@ namespace gifbot.core.Tfs
 	{
 		Task WriteToChatroom(int roomid, string message);
 
-		Task DeleteLastMessageFromChatroom(int roomId);
+		Task DeleteMessageFromChatroom(int roomId, int messageId);
 	}
 }

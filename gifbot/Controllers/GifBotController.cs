@@ -38,22 +38,19 @@ namespace gifbot.Controllers
 			}
 
 		    var roomId = rootObject.resource.postedRoomId;
+		    var messageId = rootObject.resource.id;
 
 		    var input = roomMessage.Substring(_configuration.BotName.Length + 1);
 
 		    try
 		    {
-			    if ("delete".Equals(input.Trim(), StringComparison.OrdinalIgnoreCase))
-			    {
-				    await _tfsProcess.DeleteLastMessageFromChatroom(roomId);
-					return new HttpResponseMessage(HttpStatusCode.OK);
-				}
-
-				var outputs = await _gifProcess.ProcessAsync(input);
+			    var outputs = await _gifProcess.ProcessAsync(input);
 
 				foreach (var output in outputs)
 					await _tfsProcess.WriteToChatroom(roomId, output);
-			}
+
+			    await _tfsProcess.DeleteMessageFromChatroom(roomId, messageId);
+		    }
 		    catch (Exception ex)
 		    {
 			    await WriteExceptionMessageToChatRoom(roomId, ex);
