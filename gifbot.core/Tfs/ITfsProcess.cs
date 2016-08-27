@@ -4,8 +4,8 @@ namespace gifbot.core.Tfs
 {
 	public interface ITfsProcess
 	{
-		Task WriteToChatroom(int roomid, string message);
+		Task<Entry> WriteToChatroomAsync(int roomid, string message);
 
-		Task DeleteMessageFromChatroom(int roomId, int messageId);
+		Task DeleteMessageFromChatroomAsync(Entry entry);
 	}
 }

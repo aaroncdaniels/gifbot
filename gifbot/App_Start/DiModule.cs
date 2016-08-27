@@ -1,9 +1,13 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using Autofac;
 using gifbot.core;
 using gifbot.core.gifs;
 using gifbot.core.Tfs;
+using Microsoft.TeamFoundation.Chat.WebApi;
+using Microsoft.VisualStudio.Services.Common;
 
 namespace gifbot
 {
@@ -19,26 +23,36 @@ namespace gifbot
 			builder
 				.RegisterType<GiphyStore>()
 				.As<IGifStore>()
-				.InstancePerRequest();
+				.InstancePerLifetimeScope();
 
 			builder
 				.RegisterType<Parser>()
 				.As<IParser>()
-				.InstancePerRequest();
+				.InstancePerLifetimeScope();
 
 			builder
 				.RegisterType<GifProcess>()
 				.As<IGifProcess>()
-				.InstancePerRequest();
+				.InstancePerLifetimeScope();
 
 			builder
 				.RegisterType<TermFormatter>()
 				.As<ITermFormatter>()
-				.InstancePerRequest();
+				.InstancePerLifetimeScope();
 
 			builder
 				.RegisterType<TfsProcess>()
 				.As<ITfsProcess>()
+				.InstancePerLifetimeScope();
+
+			builder
+				.Register(context =>
+				{
+					var configuration = context.Resolve<IConfiguration>();
+					var tfsUri = new Uri(configuration.TfsUri);
+					return new ChatHttpClient(tfsUri,
+						 new VssCredentials());
+				})
 				.SingleInstance();
 
 			builder
@@ -48,6 +62,11 @@ namespace gifbot
 					httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 					return httpClient;
 				})
+				.SingleInstance();
+
+			builder
+				.RegisterType<Auditor>()
+				.As<IAuditor>()
 				.SingleInstance();
 
 			base.Load(builder);

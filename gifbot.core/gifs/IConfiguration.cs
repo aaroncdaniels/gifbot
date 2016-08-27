@@ -14,6 +14,6 @@
 		string GiphyRandomRoute { get; }
 		string GiphyTranslateRoute { get; }
 		string GiphyTrendingRoute { get; }
-		int QueueSize { get; }
+		int LedgerSize { get; }
 	}
 }

@@ -97,7 +97,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FixedSizedQueue.cs" />
+    <Compile Include="Auditor.cs" />
     <Compile Include="gifs\Function.cs" />
     <Compile Include="gifs\Gif.cs" />
     <Compile Include="gifs\GiphyStore.cs" />
@@ -119,6 +119,8 @@
     <Compile Include="gifs\ITermFormatter.cs" />
     <Compile Include="gifs\Parser.cs" />
     <Compile Include="gifs\GifProcess.cs" />
+    <Compile Include="IAuditor.cs" />
+    <Compile Include="Entry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleValueArrayConverter.cs" />
     <Compile Include="gifs\Size.cs" />

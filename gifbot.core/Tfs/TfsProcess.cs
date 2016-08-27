@@ -1,34 +1,34 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using gifbot.core.gifs;
 using Microsoft.TeamFoundation.Chat.WebApi;
-using Microsoft.VisualStudio.Services.Common;
 
 namespace gifbot.core.Tfs
 {
 	public class TfsProcess : ITfsProcess
 	{
-		private readonly IConfiguration _configuration;
 		private readonly ChatHttpClient _client;
+		private readonly IConfiguration _configuration;
 
-		public TfsProcess(IConfiguration configuration)
+		public TfsProcess(
+			ChatHttpClient client,
+			IConfiguration configuration)
 		{
 			_configuration = configuration;
-			var tfsUri = new Uri(_configuration.TfsUri);
-			_client = new ChatHttpClient(tfsUri,
-				 new VssCredentials());
+			_client = client;
 		}
 
-		public async Task WriteToChatroom(int roomid, string message)
+		public async Task<Entry> WriteToChatroomAsync(int roomid, string message)
 		{
-			var reply = await _client.SendMessageToRoomAsync(new MessageData { Content = $"{message}{_configuration.BotDescription}" }, roomid);
-			await DeleteMessageFromChatroom(roomid, reply.Id);
+			var reply = await _client
+				.SendMessageToRoomAsync(new MessageData {Content = $"{message}{_configuration.BotDescription}"}, roomid)
+				.ConfigureAwait(false);
+
+			return new Entry(roomid, reply.Id);
 		}
 
-		public async Task DeleteMessageFromChatroom(int roomId, int messageId)
+		public Task DeleteMessageFromChatroomAsync(Entry entry)
 		{
-			await _client.DeleteMessageAsync(roomId, messageId);
+			return _client.DeleteMessageAsync(entry.RoomId, entry.MessageId);
 		}
 	}
 }

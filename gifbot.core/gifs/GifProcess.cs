@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace gifbot.core.gifs
@@ -10,17 +11,20 @@ namespace gifbot.core.gifs
 		private readonly ITermFormatter _termFormatter;
 		private readonly IGifStore _gifStore;
 		private readonly IConfiguration _configuration;
+		private readonly IAuditor _auditor;
 
 		public GifProcess(
 			IParser parser, 
 			ITermFormatter termFormatter, 
 			IGifStore gifStore, 
-			IConfiguration configuration)
+			IConfiguration configuration, 
+			IAuditor auditor)
 		{
 			_parser = parser;
 			_termFormatter = termFormatter;
 			_gifStore = gifStore;
 			_configuration = configuration;
+			_auditor = auditor;
 		}
 
 		public async Task<IEnumerable<string>> ProcessAsync(string input)
@@ -29,6 +33,12 @@ namespace gifbot.core.gifs
 
 			if (parsedInput.Function == Function.Help)
 				return new List<string> {_configuration.HelpMessage};
+
+			if (parsedInput.Function == Function.Delete)
+			{
+				await _auditor.StrikeFromTheRecordAsync(parsedInput.Limit).ConfigureAwait(false);
+				return Enumerable.Empty<string>();
+			}
 
 			var term = _termFormatter.Format(parsedInput.Terms);
 
@@ -116,14 +126,14 @@ namespace gifbot.core.gifs
 			return gifs;
 		}
 
-		private async Task<IEnumerable<Gif>> TranslateGifsAsync(string urlTerm, int times)
+		private Task<IEnumerable<Gif>> TranslateGifsAsync(string urlTerm, int times)
 		{
-			return await InvokeStoreSpecifiedTimes(_gifStore.TranslateGifAsync, urlTerm, times);
+			return InvokeStoreSpecifiedTimes(_gifStore.TranslateGifAsync, urlTerm, times);
 		}
 
-		private async Task<IEnumerable<Gif>> RandomGifsAsync(string urlTerm, int times)
+		private Task<IEnumerable<Gif>> RandomGifsAsync(string urlTerm, int times)
 		{
-			return await InvokeStoreSpecifiedTimes(_gifStore.RandomGifAsync, urlTerm, times);
+			return InvokeStoreSpecifiedTimes(_gifStore.RandomGifAsync, urlTerm, times);
 		}
 	}
 }

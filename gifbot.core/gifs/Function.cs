@@ -6,6 +6,7 @@
 		Random = 1,
 		Search = 2,
 		Trending = 3,
-		Help = 4
+		Help = 4,
+		Delete = 5
 	}
 }

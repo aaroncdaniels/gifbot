@@ -95,7 +95,7 @@ namespace gifbot.core.gifs
 			if (limit < 1)
 				limit = 1;
 
-			if (limit > MaxLimit)
+			if (function != Function.Delete && limit > MaxLimit)
 				limit = MaxLimit;
 			
 			return new Input(function, terms, limit, size);
